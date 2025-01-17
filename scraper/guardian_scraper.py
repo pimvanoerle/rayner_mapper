@@ -42,7 +42,11 @@ class GuardianScraper:
             author = author_elem.get_text().strip() if author_elem else None
             
             date_elem = soup.select_one("details time")
-            published_date = parser.parse(date_elem["datetime"]) if date_elem else datetime.now()
+            published_date = (
+                parser.parse(date_elem["datetime"]) 
+                if date_elem and "datetime" in date_elem 
+                else datetime.now()
+            )
             
             # Extract content
             content_elements = soup.select("div[data-gu-name='body'] p")
@@ -53,10 +57,6 @@ class GuardianScraper:
             if ":" in title:
                 restaurant_name = title.split(":")[0].strip()
             
-            # Extract section and tags
-#            section = soup.select_one("nav[aria-label='Section'] a").get_text().strip()
-#            tag_elements = soup.select("a[data-link-name='article tag']")
-#            tags = [tag.get_text().strip() for tag in tag_elements]
             
             return Article(
                 title=title,
@@ -64,9 +64,7 @@ class GuardianScraper:
                 author=author,
                 published_date=published_date,
                 content=content,
-                restaurant_name=restaurant_name,
-#                section=section,
-#                tags=tags
+                restaurant_name=restaurant_name
             )
             
         except Exception as e:
@@ -91,7 +89,12 @@ class GuardianScraper:
         if not soup:
             return
             
-        article_links = soup.select("a[data-link-name='article']")
+        # Select food article links but filter out comment links
+        article_links = [
+            link for link in soup.select("a[href*='/food/20']") 
+            if not link['href'].endswith('#comments')
+        ]
+        print(f"Found {len(article_links)} article links")  # Debug print
         processed = 0
         
         for link in article_links:

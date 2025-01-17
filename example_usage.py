@@ -5,9 +5,9 @@ def main():
     
     # Scrape some sections
     sections = [
-        "https://www.theguardian.com/technology",
-        "https://www.theguardian.com/science",
-        #"https://www.theguardian.com/food/series/jay-rayner-on-restaurants",
+        #"https://www.theguardian.com/technology",
+        #"https://www.theguardian.com/science",
+        "https://www.theguardian.com/food/series/jay-rayner-on-restaurants",
     ]
     
     for section_url in sections:

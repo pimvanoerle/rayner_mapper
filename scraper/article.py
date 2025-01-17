@@ -10,8 +10,6 @@ class Article:
     published_date: datetime
     content: str
     restaurant_name: Optional[str]
-    section: Optional[str]
-    tags: Optional[List[str]]
     
     def to_dict(self):
         article_dict = asdict(self)
